@@ -1,113 +1,249 @@
-import Image from 'next/image'
+"use client"
 
-export default function Home() {
+import { useState } from "react"
+const edges = [
+  [1037, 6, "M88 303.5L85 476H145"],
+  [1025, 6, "M145 476H190L186 490"],
+  [1025, 1026, "M186 490L178.5 517"],
+  [1024, 6, "M145 476H190L207.5 412"],
+  [1025, 1026, "M186 490L207.5 412"],
+  [4, 5, "M193 348H225.227L230 331"],
+  [4, 1024, "M193 348H225.332L207.5 412"],
+  [1024, 5, "M230 331L207.5 412"],
+  [1037, 5, "M88 303.5H237.5L230 331"],
+  [1037, 2, "M88 303.5H237.5V101.5H263"],
+  [1037, 3, "M88 303.5H237.5V80"],
+  [1037, 1022, "M88 303.5H325"],
+  [2, 5, "M230 331L237.5 303.5V101.5H262.5"],
+  [5, 3, "M230 331L237.5 303.5V79.5"],
+  [5, 1022, "M230 331L237.5 303.5H325"],
+  [2, 1022, "M325 303.5H237.5V101.5H263"],
+  [3, 1022, "M325 303.5H237.5V79.5"],
+  [2, 3, "M263 101.5H237.5V80.5"],
+  [1022, 1021, "M325 303.5H364.5"],
+  [1021, 10210, "M364.5 303.5H479"],
+
+  [10210, 1020, "M479 303.5H524"],
+  [1020, 10200, "M524 303.5H601"],
+  [10200, 1019, "M601 303.5H627"],
+  [1019, 10190, "M627 303.5H709"],
+  [10190, 1018, "M709 303.5H745"],
+  [1018, 10180, "M745 303.5H825"],
+  [10180, 1017, "M825 303.5H902"],
+  [1017, 1015, "M902 303.5H930.5V207"],
+  [1015, 1, "M930.5 207V124"],
+  [1, 1008, "M930.5 124V20H774"],
+  [1008, 1007, "M774 20H675"],
+  [1007, 1006, "M675 20H576"],
+  [1006, 1005, "M576 20H479"],
+  [1005, 1004, "M479 20H460.5L414 32.5"],
+  [1004, 3, "M414 32.5L237.5 79.5"],
+  [1026, 1030, "M178.5 517L141.5 651"],
+]
+const nodes = [
+  [1037, 87, 303],
+  [1022, 325, 303],
+  [1021, 364, 303],
+  [10210, 479, 303],
+  [1020, 524, 303],
+  [10200, 600, 303],
+  [1019, 627, 303],
+  [10190, 710, 303],
+  [1018, 745, 303],
+  [10180, 825, 303],
+  [1017, 905, 303],
+
+  [1015, 930, 210],
+  [1, 930, 125],
+  [2, 266, 102],
+  [3, 238, 80],
+
+  [4, 200, 348],
+  [5, 230, 330],
+  [1008, 774, 20],
+  [1007, 675, 20],
+  [1006, 576, 20],
+
+  [1005, 479, 20],
+  [1004, 414, 32],
+  [1024, 207, 413],
+  [1025, 186, 489],
+  [1026, 179, 516],
+  [1030, 142, 649],
+  [6, 145, 476],
+] //[id, x, y]
+import Node from "@/app/components/Node"
+import Edge from "./components/Edge"
+import { dijkstra } from "./algorithms/dijkstra"
+
+export default function Page() {
+  const [mode, setMode] = useState<"start" | "end" | null>(null)
+  const [distance, setDistance] = useState<number | null>(null)
+  const [path, setPath] = useState<string[]>([])
+  const [startNode, setStartNode] = useState(-1)
+  const [endNode, setEndNode] = useState(-1)
+
+  const handleModeChange = () => {
+    if (mode == "start") setMode("end")
+    else if (mode == null) setMode("start")
+    else setMode(null)
+  }
+
+  const handleNodeClick = (e: any) => {
+    const id = e.currentTarget.id
+    if (mode == "start" && endNode != id) setStartNode(id)
+    else if (mode == "end" && startNode != id) setEndNode(id)
+    else if (mode === null && startNode != id) {
+      setEndNode(id)
+      const shortestPath = dijkstra(startNode, id)
+      setDistance(shortestPath.distance)
+      setPath(shortestPath.path)
+    }
+  }
+
+  const handlePathfinding = () => {
+    if (startNode == -1 || endNode == -1) return
+    setMode(null)
+    const shortestPath = dijkstra(startNode, endNode)
+    setDistance(shortestPath.distance)
+    setPath(shortestPath.path)
+  }
+
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">app/page.tsx</code>
-        </p>
-        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:h-auto lg:w-auto lg:bg-none">
-          <a
-            className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
-      </div>
-
-      <div className="relative flex place-items-center before:absolute before:h-[300px] before:w-[480px] before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-[240px] after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700 before:dark:opacity-10 after:dark:from-sky-900 after:dark:via-[#0141ff] after:dark:opacity-40 before:lg:h-[360px]">
-        <Image
-          className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
+    <main>
+      <button onClick={handleModeChange}>Change Mode: {mode}</button>
+      <button className="bg-emerald-400 text-white px-6 p-2 rounded font-semibold" onClick={handlePathfinding}>
+        Find Path
+      </button>
+      {distance}
+      {path}
+      <svg className="w-[60%] m-auto mt-16 " viewBox="0 0 1228 1009" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M196.5 3H3.5V945L161 1005L331 370L285 355L295 320.5H958.5L1221 3H437L273 22.5H196.5V3Z" fill="#F9F9FF" stroke="#ECEEFE" stroke-width="6" />
+        <path
+          d="M459.736 38.9628L375.236 70.0723C372.09 71.2305 370 74.2273 370 77.5797V133C370 137.418 373.582 141 378 141H462.5C466.918 141 470.5 137.418 470.5 133V46.4702C470.5 40.905 464.959 37.0401 459.736 38.9628Z"
+          fill="#EBE9F7"
+          stroke="#C4C6DF"
+          stroke-width="2"
         />
-      </div>
+        <path
+          d="M560 35H478.5C474.082 35 470.5 38.5817 470.5 43V133C470.5 137.418 474.082 141 478.5 141H560C564.418 141 568 137.418 568 133V43C568 38.5817 564.418 35 560 35Z"
+          fill="#EBE9F7"
+          stroke="#C4C6DF"
+          stroke-width="2"
+        />
+        <path
+          d="M568 43V133C568 137.418 571.582 141 576 141H656.5C660.918 141 664.5 137.418 664.5 133V43C664.5 38.5817 660.918 35 656.5 35H576C571.582 35 568 38.5817 568 43Z"
+          fill="#EBE9F7"
+          stroke="#C4C6DF"
+          stroke-width="2"
+        />
+        <path
+          d="M761.5 43V133C761.5 137.418 765.082 141 769.5 141H850C854.418 141 858 137.418 858 133V43C858 38.5817 854.418 35 850 35H769.5C765.082 35 761.5 38.5817 761.5 43Z"
+          fill="#EBE9F7"
+          stroke="#C4C6DF"
+          stroke-width="2"
+        />
+        <path
+          d="M915 172.5V280.5C915 284.918 911.418 288.5 907 288.5H846.5C842.082 288.5 838.5 284.918 838.5 280.5V172.5C838.5 168.082 842.082 164.5 846.5 164.5H907C911.418 164.5 915 168.082 915 172.5Z"
+          fill="#EBE9F7"
+          stroke="#C4C6DF"
+          stroke-width="2"
+        />
+        <path
+          d="M838.5 149V280.5C838.5 284.918 834.918 288.5 830.5 288.5H730.5C726.082 288.5 722.5 284.918 722.5 280.5V149C722.5 144.582 726.082 141 730.5 141H830.5C834.918 141 838.5 144.582 838.5 149Z"
+          fill="#EBE9F7"
+          stroke="#C4C6DF"
+          stroke-width="2"
+        />
+        <path
+          d="M722.5 149V280.5C722.5 284.918 718.918 288.5 714.5 288.5H621C616.582 288.5 613 284.918 613 280.5V149C613 144.582 616.582 141 621 141H714.5C718.918 141 722.5 144.582 722.5 149Z"
+          fill="#EBE9F7"
+          stroke="#C4C6DF"
+          stroke-width="2"
+        />
+        <path
+          d="M613 149V280.5C613 284.918 609.418 288.5 605 288.5H509.5C505.082 288.5 501.5 284.918 501.5 280.5V149C501.5 144.582 505.082 141 509.5 141H605C609.418 141 613 144.582 613 149Z"
+          fill="#EBE9F7"
+          stroke="#C4C6DF"
+          stroke-width="2"
+        />
+        <path
+          d="M501.5 149V280.5C501.5 284.918 497.918 288.5 493.5 288.5H351.5C347.082 288.5 343.5 284.918 343.5 280.5V149C343.5 144.582 347.082 141 351.5 141H493.5C497.918 141 501.5 144.582 501.5 149Z"
+          fill="#EBE9F7"
+          stroke="#C4C6DF"
+          stroke-width="2"
+        />
+        <path
+          d="M343.5 149V277.873C343.5 283.195 338.401 287.033 333.288 285.561L279.788 270.165C276.36 269.179 274 266.044 274 262.478V149C274 144.582 277.582 141 282 141H335.5C339.918 141 343.5 144.582 343.5 149Z"
+          fill="#EBE9F7"
+          stroke="#C4C6DF"
+          stroke-width="2"
+        />
+        <path
+          d="M664.5 43V133C664.5 137.418 668.082 141 672.5 141H753.5C757.918 141 761.5 137.418 761.5 133V43C761.5 38.5817 757.918 35 753.5 35H672.5C668.082 35 664.5 38.5817 664.5 43Z"
+          fill="#FFD3EE"
+          stroke="#E2718C"
+          stroke-width="2"
+        />
+        <path
+          d="M955.733 322.5H955.486C951.073 322.5 947.494 318.927 947.486 314.514L947.014 51.5143C947.006 47.0905 950.59 43.5 955.014 43.5H1020.5C1024.92 43.5 1028.5 39.9183 1028.5 35.5V32C1028.5 27.5817 1032.08 24 1036.5 24H1055.5C1059.92 24 1063.5 20.4183 1063.5 16V9C1063.5 4.58172 1067.08 1 1071.5 1H1208.23C1215 1 1218.71 8.88011 1214.4 14.0966L961.9 319.597C960.38 321.435 958.119 322.5 955.733 322.5Z"
+          fill="#EBE9F7"
+          stroke="#C4C6DF"
+          stroke-width="2"
+        />
+        <path
+          d="M9.51044 86H164C168.418 86 172 89.5817 172 94V279C172 283.418 168.418 287 164 287H9.5105C5.09222 287 1.5105 283.418 1.5105 279L1.51045 94C1.51045 89.5817 5.09216 86 9.51044 86Z"
+          fill="#EBE9F7"
+          stroke="#C4C6DF"
+          stroke-width="2"
+        />
+        <path
+          d="M204.378 497.458L221.326 434.21C222.473 429.928 226.884 427.395 231.16 428.563L303.822 448.404C308.069 449.563 310.581 453.936 309.443 458.189L292.573 521.252C291.429 525.528 287.03 528.062 282.757 526.908L210.019 507.251C205.76 506.1 203.237 501.719 204.378 497.458Z"
+          fill="#EBE9F7"
+          stroke="#C4C6DF"
+          stroke-width="2"
+        />
+        <path
+          d="M210.052 507.26L282.799 526.919C287.056 528.069 289.579 532.447 288.441 536.707L273.106 594.115C271.95 598.444 267.464 600.979 263.159 599.737L190.7 578.823C186.512 577.615 184.063 573.277 185.191 569.067L200.237 512.913C201.383 508.638 205.78 506.106 210.052 507.26Z"
+          fill="#EBE9F7"
+          stroke="#C4C6DF"
+          stroke-width="2"
+        />
+        <path
+          d="M188.389 647.929L173.417 643.918C169.149 642.774 164.762 645.307 163.619 649.574L154.933 681.992C153.795 686.237 156.294 690.604 160.53 691.774L233.23 711.854C237.511 713.036 241.937 710.504 243.087 706.213L259.412 645.292C260.562 640.999 257.993 636.591 253.691 635.477L211.173 624.461C206.921 623.359 202.576 625.892 201.439 630.135L198.187 642.272C197.043 646.54 192.656 649.073 188.389 647.929Z"
+          fill="#EBE9F7"
+          stroke="#C4C6DF"
+          stroke-width="2"
+        />
+        <path
+          d="M142.4 580.012L164.747 496.613C166.111 491.522 162.265 486.526 156.995 486.542L114.331 486.671C109.909 486.684 106.337 490.282 106.355 494.703L106.688 577.78C106.706 582.155 110.235 585.705 114.61 585.747L134.595 585.941C138.244 585.976 141.455 583.537 142.4 580.012Z"
+          fill="#EBE9F7"
+          stroke="#C4C6DF"
+          stroke-width="2"
+        />
+        <path
+          d="M254.537 342.633L326.301 366.142C330.339 367.464 332.638 371.713 331.537 375.817L313.582 442.739C312.434 447.02 308.024 449.551 303.748 448.383L231.081 428.541C226.836 427.382 224.324 423.011 225.46 418.759L244.317 348.17C245.503 343.733 250.172 341.203 254.537 342.633Z"
+          fill="#EBE9F7"
+          stroke="#C4C6DF"
+          stroke-width="2"
+        />
 
-      <div className="mb-32 grid text-center lg:mb-0 lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Docs{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
+        <path d="M274 88H321V140H274V88Z" fill="#EBE9F7" />
+        <path d="M283 95C283 91.134 286.134 88 290 88H323C326.866 88 330 91.134 330 95V133C330 136.866 326.866 140 323 140H290C286.134 140 283 136.866 283 133V95Z" fill="#EBE9F7" />
+        <path d="M274 141H322C326.418 141 330 137.418 330 133V96C330 91.5817 326.418 88 322 88H274M274 115H307.5" stroke="#C4C6DF" stroke-width="2" />
+        <path d="M180 357H200L174 459H154L180 357Z" fill="#EBE9F7" />
+        <path d="M173.5 459L200 357M181 357L153 459" stroke="#C4C6DF" stroke-width="2" />
+        <path d="M868 88H915V136H868V88Z" fill="#EBE9F7" />
+        <path d="M860 97C860 92.0294 864.029 88 869 88H898C902.971 88 907 92.0294 907 97V127C907 131.971 902.971 136 898 136H869C864.029 136 860 131.971 860 127V97Z" fill="#EBE9F7" />
+        <path d="M915 136.5H868C863.582 136.5 860 132.918 860 128.5V96.5C860 92.0817 863.582 88.5 868 88.5H915M915 112.5H880.5" stroke="#C4C6DF" stroke-width="2" />
 
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Learn{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Templates{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Explore the Next.js 13 playground.
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Deploy{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
+        {edges.map((edge: any[], i: number) => (
+          <Edge key={i} d={edge[2]} path={path.includes(edge[0].toString()) && path.includes(edge[1].toString())} />
+        ))}
+        {nodes.map((node: number[], i: number) => (
+          <Node key={i} id={node[0]} x={node[1]} y={node[2]} start={node[0] == startNode} end={node[0] == endNode} path={path.includes(node[0].toString())} handleClick={handleNodeClick} />
+        ))}
+      </svg>
     </main>
   )
 }
