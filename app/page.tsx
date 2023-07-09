@@ -144,7 +144,6 @@ import Edge from "./components/Edge"
 import { dijkstra } from "./algorithms/dijkstra"
 import Classroom from "./components/Classroom"
 import Extra from "./components/Extra"
-import { Metadata } from "next"
 
 export default function Page() {
   const [mode, setMode] = useState<"start" | "end">("start")
@@ -154,8 +153,6 @@ export default function Page() {
   const [endNode, setEndNode] = useState(-1)
 
   const reorderArray = (id: number) => {
-    const pass = [2, 1, 4]
-    if (pass.includes(id)) return
     let i = 0
     for (i; i < classRooms.length; i++) {
       if (classRooms[i][0] == id) break
@@ -171,6 +168,7 @@ export default function Page() {
       if (!pass.includes(id)) reorderArray(id)
       setStartNode(id)
       if (endNode != -1) {
+        if (!pass.includes(endNode + "")) reorderArray(endNode)
         const shortestPath = dijkstra(id, endNode)
         setDistance(shortestPath.distance)
         setPath(shortestPath.path)
@@ -178,6 +176,7 @@ export default function Page() {
     } else if (mode == "end" && startNode != id) {
       if (!pass.includes(id)) reorderArray(id)
       setEndNode(id)
+      if (!pass.includes(startNode + "")) reorderArray(startNode)
       const shortestPath = dijkstra(startNode, id)
       setDistance(shortestPath.distance)
       setPath(shortestPath.path)
