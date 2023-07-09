@@ -9,7 +9,7 @@ interface Node {
 }
 
 const Node = ({ id, x, y, start, end, path, handleClick }: Node) => {
-  return <circle id={id + ""} cx={x} cy={y} r={start || end ? 10 : 6} fill={end ? "#818cf8" : start || path ? "#34d399" : "#DADFE9"} /* className={!path ? "opacity-0" : ""} */ onClick={handleClick} />
+  return <circle className={path ? "" : "opacity-0"} id={id + ""} cx={x} cy={y} r={start || end ? 8 : 4} fill={end ? "#818cf8" : start || path ? "#34d399" : "#DADFE9"} onClick={handleClick} />
 }
 
 export default Node
