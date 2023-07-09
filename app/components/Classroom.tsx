@@ -14,7 +14,7 @@ const Classroom = ({ id, d, start, end, handleClick }: Classroom) => {
       onClick={handleClick}
       fill={end ? "#ADBFFD" : start ? "#A7F3D0" : "#EBE9F7"}
       stroke={end ? "#3F7DF4" : start ? "#1AC989" : "#C4C6DF"}
-      stroke-width="2"
+      strokeWidth="2"
     />
   )
 }

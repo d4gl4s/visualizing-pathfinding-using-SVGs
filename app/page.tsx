@@ -146,11 +146,6 @@ import Classroom from "./components/Classroom"
 import Extra from "./components/Extra"
 import { Metadata } from "next"
 
-export const metadata: Metadata = {
-  title: "Indoor pathfinding",
-  description: "Interactive indoor pathfinding visualizer built using React.",
-}
-
 export default function Page() {
   const [mode, setMode] = useState<"start" | "end">("start")
   const [distance, setDistance] = useState<number | null>(null)
@@ -204,7 +199,7 @@ export default function Page() {
       </div>
 
       <svg className="ml-2 md:ml-0 mt-20 md:mt-14 2xl:mt-20 m-auto" viewBox="0 0 1228 1009" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M196.5 3H3.5V945L161 1005L331 370L285 355L295 320.5H958.5L1221 3H437L273 22.5H196.5V3Z" fill="#F9F9FF" stroke="#ECEEFE" stroke-width="6" />
+        <path d="M196.5 3H3.5V945L161 1005L331 370L285 355L295 320.5H958.5L1221 3H437L273 22.5H196.5V3Z" fill="#F9F9FF" stroke="#ECEEFE" strokeWidth="6" />
 
         {edges.map((edge: any[], i: number) => (
           <Edge key={i} d={edge[2]} path={path.includes(edge[0].toString()) && path.includes(edge[1].toString())} />
