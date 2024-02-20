@@ -1,34 +1,44 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Pathfinding Visualizer
 
-## Getting Started
+This project is a React-based application designed to explore visualizing graph manipulation and pathfinding algorithms using SVGs. Unlike traditional React grid-based pathfinding visualizers, this application allows for flexible node placement and displays edges between nodes. 
 
-First, run the development server:
+You can check out the project demo [here](https://indoor-pathfinding.vercel.app/), or read more about the project on the [project page](https://www.daglasaitsen.com/pathfinder).
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-```
+## The Idea
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+The motivation behind this project was to develop a pathfinding program that offers a visual representation of the shortest path between two distinct rooms within a building. Instead of being limited to a grid layout, the application aims to provide a more realistic depiction of room layouts within a building. As an example, the first floor of the University of Tartu Delta Center was chosen to demonstrate this concept.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## How Does It Work?
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+- Each room depicted on the map represents a node in the graph.
+- Undirected edges correspond to paths connecting adjacent rooms, with associated weights representing the distance between nodes.
+- SVG paths for all nodes and edges are stored in an array, while edges and weights are stored in a JavaScript object.
 
-## Learn More
+### Pathfinding Algorithm
 
-To learn more about Next.js, take a look at the following resources:
+1. The user selects a starting point by clicking on a room on the map.
+2. After selecting the starting point, a destination can be chosen.
+3. The room numbers of the starting and ending points are stored in React state.
+4. A function utilizing Dijkstra's algorithm calculates the shortest path between the selected points and returns an array of nodes on the path.
+5. The returned array triggers a React re-render to reflect the changes.
+6. When displaying the path, the application iterates through the array of edges. If both connected nodes of an edge are present in the returned node array, the SVG path associated with the edge is displayed; otherwise, the edge opacity is set to zero. The same principle applies to nodes—only if a node exists within the returned array is it rendered.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Technologies Used
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+- React
+- Typescript
+- SVG manipulation
 
-## Deploy on Vercel
+## Preview
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+<img src="https://github.com/d4gl4s/visualizing-react-pathfinding-using-SVGs/assets/91371101/275e4cd5-210f-4ac6-b32a-5cd3e47c7fa1" alt="Image Description" style="width:50%;">
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+
+
+## Links
+
+You can check out the project demo [here](https://indoor-pathfinding.vercel.app/), or read more about the project on the [project page](https://www.daglasaitsen.com/pathfinder).
+
+## Acknowledgements
+
+Special thanks to the University of Tartu for providing the inspiration and example floor plan for this project.
