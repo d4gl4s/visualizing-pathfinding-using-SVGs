@@ -2,7 +2,7 @@
 
 This project is a React-based application designed to explore visualizing graph manipulation and pathfinding algorithms using SVGs. Unlike traditional React grid-based pathfinding visualizers, this application allows for flexible node placement and displays edges between nodes. 
 
-You can check out the project demo [here](https://indoor-pathfinding.vercel.app/), or read more about the project on the [project page](https://www.daglasaitsen.com/pathfinder).
+You can check out the interactive project demo [here](https://indoor-pathfinding.vercel.app/), or read more about the project on the [project page](https://www.daglasaitsen.com/pathfinder).
 
 ## The Idea
 
@@ -37,7 +37,7 @@ The motivation behind this project was to develop a pathfinding program that off
 
 ## Links
 
-You can check out the project demo [here](https://indoor-pathfinding.vercel.app/), or read more about the project on the [project page](https://www.daglasaitsen.com/pathfinder).
+You can check out the interactive project demo [here](https://indoor-pathfinding.vercel.app/), or read more about the project on the [project page](https://www.daglasaitsen.com/pathfinder).
 
 ## Acknowledgements
 
